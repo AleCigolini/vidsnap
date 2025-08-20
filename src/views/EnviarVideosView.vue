@@ -18,9 +18,8 @@ function handleSubmit() {
     messageType.value = 'error'
     return
   }
-  // Mock de envio
+
   setTimeout(() => {
-    // Simula sucesso ou erro aleatório
     if (Math.random() > 0.2) {
       message.value = 'Vídeo(s) enviado(s) com sucesso!'
       messageType.value = 'success'

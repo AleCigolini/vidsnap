@@ -4,6 +4,11 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/',
+      name: 'welcome',
+      component: () => import('../views/BemVindoView.vue'),
+    },
+    {
       path: '/enviar-videos',
       name: 'enviar-videos',
       component: () => import('../views/EnviarVideosView.vue'),

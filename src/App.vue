@@ -1,14 +1,18 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
+import { computed } from 'vue'
+
+const route = useRoute()
+const showNavBar = computed(() => route.path !== '/')
 </script>
 
 <template>
   <div class="app-container">
-    <nav class="nav-bar">
+    <nav v-if="showNavBar" class="nav-bar">
       <RouterLink to="/enviar-videos" class="nav-link">Enviar vídeos</RouterLink>
       <RouterLink to="/listar-videos" class="nav-link">Listar arquivos</RouterLink>
     </nav>
-    <main class="main-content">
+    <main class="main-content" :class="{ 'full': !showNavBar }">
       <RouterView />
     </main>
   </div>
@@ -71,6 +75,10 @@ import { RouterLink, RouterView } from 'vue-router'
   overflow: auto;
   padding: 0;
   box-sizing: border-box;
+}
+
+.main-content.full {
+  height: 100vh;
 }
 
 @media (max-width: 767px) {
