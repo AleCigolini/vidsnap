@@ -32,9 +32,10 @@ import { RouterLink, RouterView } from 'vue-router'
   height: 25vh;
   min-height: 64px;
   max-height: 40vh;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
   position: relative;
   background: inherit;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
 }
 
 .nav-link {
@@ -44,6 +45,7 @@ import { RouterLink, RouterView } from 'vue-router'
   padding: 0.5rem 1rem;
   border-radius: 30px;
   transition: background 0.2s, color 0.2s;
+  outline: none;
 }
 
 .nav-link.router-link-active {
@@ -51,8 +53,12 @@ import { RouterLink, RouterView } from 'vue-router'
   color: #fff;
 }
 
-.nav-link:hover {
-  background: darkblue;
+.nav-link:hover,
+.nav-link:focus {
+  background: rgba(25, 118, 210, 0.25);
+  color: #fff;
+  outline: 2px solid #1976d2;
+  outline-offset: 2px;
 }
 
 .main-content {
