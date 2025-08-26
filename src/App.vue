@@ -1,18 +1,25 @@
 <script setup>
-import { RouterLink, RouterView, useRoute } from 'vue-router'
-import { computed } from 'vue'
+import { RouterLink, RouterView, useRouter } from 'vue-router'
+import { useAuth } from '@/services/authService'
 
-const route = useRoute()
-const showNavBar = computed(() => route.path !== '/')
+const { isAuthenticated, logout } = useAuth()
+const router = useRouter()
+
+const handleLogout = () => {
+  logout()
+  router.push('/login')
+}
 </script>
 
 <template>
   <div class="app-container">
-    <nav v-if="showNavBar" class="nav-bar">
+    <nav v-if="isAuthenticated" class="nav-bar">
+      <RouterLink to="/" class="nav-link">Tela inicial</RouterLink>
       <RouterLink to="/enviar-videos" class="nav-link">Enviar vídeos</RouterLink>
       <RouterLink to="/listar-videos" class="nav-link">Listar arquivos</RouterLink>
+      <a href="#" @click.prevent="handleLogout" class="nav-link">Sair</a>
     </nav>
-    <main class="main-content" :class="{ 'full': !showNavBar }">
+    <main class="main-content" :class="{ 'full': !isAuthenticated }">
       <RouterView />
     </main>
   </div>
@@ -63,6 +70,11 @@ const showNavBar = computed(() => route.path !== '/')
   color: #fff;
   outline: 2px solid #1976d2;
   outline-offset: 2px;
+}
+
+/* Adicionado para o botão Sair */
+.nav-bar a.nav-link {
+  cursor: pointer;
 }
 
 .main-content {

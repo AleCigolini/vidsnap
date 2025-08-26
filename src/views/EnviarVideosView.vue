@@ -1,9 +1,38 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { enviarVideos } from '@/services/videoService'
 
 const files = ref<FileList | null>(null)
 const message = ref('')
 const messageType = ref<'success' | 'error' | ''>('')
+const isSending = ref(false)
+
+function limparMensagem() {
+  message.value = ''
+  messageType.value = ''
+}
+
+function exibirMensagem(texto: string, tipo: 'success' | 'error') {
+  message.value = texto
+  messageType.value = tipo
+  setTimeout(() => {
+    limparMensagem()
+  }, 5000)
+}
+
+function limparInputArquivo() {
+  files.value = null
+  const input = document.querySelector('input[type="file"]') as HTMLInputElement | null
+  if (input) input.value = ''
+}
+
+function validarArquivosSelecionados(): boolean {
+  if (!files.value || files.value.length === 0) {
+    exibirMensagem('Selecione pelo menos um vídeo para enviar.', 'error')
+    return false
+  }
+  return true
+}
 
 function handleFileChange(event: Event) {
   const target = event.target as HTMLInputElement
@@ -12,23 +41,13 @@ function handleFileChange(event: Event) {
   messageType.value = ''
 }
 
-function handleSubmit() {
-  if (!files.value || files.value.length === 0) {
-    message.value = 'Selecione pelo menos um vídeo para enviar.'
-    messageType.value = 'error'
-    return
-  }
-
-  setTimeout(() => {
-    if (Math.random() > 0.2) {
-      message.value = 'Vídeo(s) enviado(s) com sucesso!'
-      messageType.value = 'success'
-      files.value = null
-    } else {
-      message.value = 'Falha ao enviar o(s) vídeo(s). Tente novamente.'
-      messageType.value = 'error'
-    }
-  }, 800)
+async function handleSubmit() {
+  if (!validarArquivosSelecionados()) return
+  isSending.value = true
+  const resultado = await enviarVideos(files.value)
+  exibirMensagem(resultado.message, resultado.success ? 'success' : 'error')
+  limparInputArquivo()
+  isSending.value = false
 }
 </script>
 
@@ -45,9 +64,12 @@ function handleSubmit() {
         accept="video/*"
         multiple
         @change="handleFileChange"
-        :disabled="messageType === 'success'"
+        :disabled="isSending"
       />
-      <button type="submit" :disabled="messageType === 'success'">Enviar</button>
+      <button type="submit" :disabled="isSending">
+        <span v-if="isSending">Enviando...</span>
+        <span v-else>Enviar</span>
+      </button>
     </form>
     <div v-if="message" :class="['mensagem', messageType]">
       {{ message }}

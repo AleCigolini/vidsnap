@@ -1,8 +1,12 @@
 {
   "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["ES2015", "DOM"],
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "moduleResolution": "Node"
   },
   "exclude": ["node_modules", "dist"]
 }
