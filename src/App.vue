@@ -1,85 +1,110 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { RouterLink, RouterView, useRouter } from 'vue-router'
+import { useAuth } from '@/services/authService'
+
+const { isAuthenticated, logout } = useAuth()
+const router = useRouter()
+
+const handleLogout = () => {
+  logout()
+  router.push('/login')
+}
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <div class="app-container">
+    <nav v-if="isAuthenticated" class="nav-bar">
+      <RouterLink to="/" class="nav-link">Tela inicial</RouterLink>
+      <RouterLink to="/enviar-videos" class="nav-link">Enviar vídeos</RouterLink>
+      <RouterLink to="/listar-videos" class="nav-link">Listar arquivos</RouterLink>
+      <a href="#" @click.prevent="handleLogout" class="nav-link">Sair</a>
+    </nav>
+    <main class="main-content" :class="{ 'full': !isAuthenticated }">
+      <RouterView />
+    </main>
+  </div>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
+.nav-bar {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
+  height: 25vh;
+  min-height: 64px;
+  max-height: 40vh;
+  position: relative;
+  background: inherit;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
+.nav-link {
+  font-size: 1.2rem;
+  color: #fff;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 30px;
+  transition: background 0.2s, color 0.2s;
+  outline: none;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+.nav-link.router-link-active {
+  background: #1976d2;
+  color: #fff;
 }
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+.nav-link:hover,
+.nav-link:focus {
+  background: rgba(25, 118, 210, 0.25);
+  color: #fff;
+  outline: 2px solid #1976d2;
+  outline-offset: 2px;
 }
 
-nav a:first-of-type {
-  border: 0;
+/* Adicionado para o botão Sair */
+.nav-bar a.nav-link {
+  cursor: pointer;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+.main-content {
+  flex: 1 1 0;
+  width: 100%;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.main-content.full {
+  height: 100vh;
+}
+
+@media (max-width: 767px) {
+  .nav-bar {
+    flex-direction: row;
+    gap: 0.5rem;
+    height: 25vh;
+    min-height: 56px;
+    max-height: 40vh;
+    justify-content: center;
+    padding: 0 0.5rem;
   }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
+  .main-content {
+    padding: 0;
   }
 }
 </style>
