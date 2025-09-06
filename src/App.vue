@@ -1,6 +1,7 @@
 <script setup>
 import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { useAuth } from '@/services/authService'
+import Notification from "@/components/Notification.vue";
 
 const { isAuthenticated, logout } = useAuth()
 const router = useRouter()
@@ -13,6 +14,7 @@ const handleLogout = () => {
 
 <template>
   <div class="app-container">
+    <Notification v-if="isAuthenticated" />
     <nav v-if="isAuthenticated" class="nav-bar">
       <RouterLink to="/" class="nav-link">Tela inicial</RouterLink>
       <RouterLink to="/enviar-videos" class="nav-link">Enviar vídeos</RouterLink>
