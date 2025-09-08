@@ -24,11 +24,11 @@ export function listarArquivosCompactados(): Promise<VideoZip[]> {
  *
  * Exemplo de uso real (descomente e ajuste quando tiver o endpoint):
  *
- * // import axios from 'axios'
+ * // import api from './api'
  * // export async function enviarVideos(arquivos: FileList | File[]): Promise<{ success: boolean, message: string }> {
  * //   const formData = new FormData()
  * //   Array.from(arquivos).forEach(file => formData.append('videos', file))
- * //   const response = await axios.post('/api/videos', formData)
+ * //   const response = await api.post('/api/videos', formData)
  * //   return response.data
  * // }
  */

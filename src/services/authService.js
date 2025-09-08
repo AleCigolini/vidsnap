@@ -1,26 +1,38 @@
 import { ref } from 'vue'
 
-const isAuthenticated = ref(sessionStorage.getItem('isAuthenticated') === 'true')
+const tokenKey = 'jwtToken'
+const token = ref(sessionStorage.getItem(tokenKey) || '')
 
 function login(username, password) {
+  // Simulate API call and JWT response
   if (username === 'admin' && password === 'admin') {
-    isAuthenticated.value = true
-    sessionStorage.setItem('isAuthenticated', 'true')
+    const fakeJwt = 'fake-jwt-token-for-admin' // Replace with real API call
+    token.value = fakeJwt
+    sessionStorage.setItem(tokenKey, fakeJwt)
     return true
   }
   return false
 }
 
 function logout() {
-  isAuthenticated.value = false
-  sessionStorage.removeItem('isAuthenticated')
+  token.value = ''
+  sessionStorage.removeItem(tokenKey)
+}
+
+function getToken() {
+  return token.value
+}
+
+function isAuthenticated() {
+  return !!token.value
 }
 
 export function useAuth() {
   return {
-    isAuthenticated,
+    token,
     login,
     logout,
+    getToken,
+    isAuthenticated,
   }
 }
-
