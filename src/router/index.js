@@ -35,9 +35,9 @@ router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
 
     if (requiresAuth && !isAuthenticated()) {
-    next('/login')
+        next('/login')
     } else if (to.path === '/login' && isAuthenticated()) {
-    next('/')
+        next('/')
   } else {
     next()
   }

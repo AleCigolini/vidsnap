@@ -1,10 +1,10 @@
-import { ref } from 'vue'
+import {ref} from 'vue'
 
 const notification = ref(null)
 let eventSource = null
 
 function connect() {
-    eventSource = new EventSource('http://localhost:3000/events')
+    eventSource = new EventSource(process.env.VUE_APP_API_BASE_URL + "/events")
 
     eventSource.onmessage = (event) => {
         notification.value = JSON.parse(event.data)
