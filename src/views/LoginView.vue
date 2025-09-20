@@ -1,7 +1,7 @@
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuth } from '@/services/authService'
+import {ref} from 'vue'
+import {useRouter} from 'vue-router'
+import {useAuth} from '@/services/authService'
 
 const username = ref('')
 const password = ref('')

@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { nextTick } from 'vue'
+import {beforeEach, describe, expect, it, vi} from 'vitest'
+import {mount} from '@vue/test-utils'
+import {nextTick} from 'vue'
 import ListarVideosView from '../ListarVideosView.vue'
-import { listarArquivosCompactados } from '@/services/videoService'
+import {listarArquivosCompactados} from '@/services/videoService.js'
 import Loader from '@/components/Loader.vue'
 
 vi.mock('@/services/videoService', () => ({

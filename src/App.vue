@@ -1,7 +1,8 @@
 <script setup>
-import { RouterLink, RouterView, useRouter } from 'vue-router'
-import { useAuth } from '@/services/authService'
+import {RouterLink, RouterView, useRouter} from 'vue-router'
+import {useAuth} from '@/services/authService'
 import Notification from "@/components/Notification.vue";
+import {computed} from "vue";
 
 const { isAuthenticated, logout } = useAuth()
 const router = useRouter()
@@ -10,18 +11,20 @@ const handleLogout = () => {
   logout()
   router.push('/login')
 }
+
+const isLoggedIn = computed(() => isAuthenticated())
 </script>
 
 <template>
   <div class="app-container">
-    <Notification v-if="isAuthenticated" />
-    <nav v-if="isAuthenticated" class="nav-bar">
+    <Notification v-if="isLoggedIn"/>
+    <nav v-if="isLoggedIn" class="nav-bar">
       <RouterLink to="/" class="nav-link">Tela inicial</RouterLink>
       <RouterLink to="/enviar-videos" class="nav-link">Enviar vídeos</RouterLink>
       <RouterLink to="/listar-videos" class="nav-link">Listar arquivos</RouterLink>
       <a href="#" @click.prevent="handleLogout" class="nav-link">Sair</a>
     </nav>
-    <main class="main-content" :class="{ 'full': !isAuthenticated }">
+    <main class="main-content" :class="{ 'full': !isLoggedIn }">
       <RouterView />
     </main>
   </div>

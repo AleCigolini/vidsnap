@@ -41,6 +41,8 @@ jobs:
     needs: sonarcloud
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
+    env:
+      VUE_APP_API_BASE_URL: ${{ secrets.VUE_APP_API_BASE_URL }}
 
     steps:
       - uses: actions/checkout@v4

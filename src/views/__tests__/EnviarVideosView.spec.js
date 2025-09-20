@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
+import {beforeEach, describe, expect, it, vi} from 'vitest'
+import {mount} from '@vue/test-utils'
 import EnviarVideosView from '../EnviarVideosView.vue'
-import { enviarVideos } from '@/services/videoService'
+import {enviarVideos} from '@/services/videoService.js'
 
 vi.mock('@/services/videoService', () => ({
   enviarVideos: vi.fn()
