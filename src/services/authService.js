@@ -1,12 +1,13 @@
-import { ref } from 'vue'
+import {ref} from 'vue'
 
 const tokenKey = 'jwtToken'
 const token = ref(sessionStorage.getItem(tokenKey) || '')
 
 function login(username, password) {
+    console.log(import.meta.env.VITE_APP_API_BASE_URL)
   // Simulate API call and JWT response
   if (username === 'admin' && password === 'admin') {
-    const fakeJwt = 'fake-jwt-token-for-admin' // Replace with real API call
+      const fakeJwt = 'fake-jwt-token-for-admin'
     token.value = fakeJwt
     sessionStorage.setItem(tokenKey, fakeJwt)
     return true

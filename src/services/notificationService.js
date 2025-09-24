@@ -4,7 +4,7 @@ const notification = ref(null)
 let eventSource = null
 
 function connect() {
-    eventSource = new EventSource(process.env.VUE_APP_API_BASE_URL + "/events")
+    eventSource = new EventSource(import.meta.env.VITE_APP_API_BASE_URL + "/events")
 
     eventSource.onmessage = (event) => {
         notification.value = JSON.parse(event.data)
