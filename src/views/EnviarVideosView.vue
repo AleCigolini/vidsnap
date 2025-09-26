@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { enviarVideos } from '@/services/videoService'
+import {ref} from 'vue'
+import {enviarVideos} from '@/services/videoService'
 
 const files = ref<FileList | null>(null)
 const message = ref('')
@@ -55,16 +55,18 @@ async function handleSubmit() {
   <div class="enviar-videos-container">
     <h1>Enviar vídeos</h1>
     <p class="descricao">
-      Ao enviar um ou mais vídeos, eles serão processados para extração dos frames. Um arquivo compactado com as imagens será gerado e poderá ser baixado na página
-      <RouterLink to="/listar-videos" class="link-acao">Listar arquivos</RouterLink>.
+      Ao enviar um ou mais vídeos, eles serão processados para extração dos frames. Um arquivo compactado com as imagens
+      será gerado e poderá ser baixado na página
+      <RouterLink to="/listar-videos" class="link-acao">Listar arquivos</RouterLink>
+      .
     </p>
     <form class="upload-form" @submit.prevent="handleSubmit">
       <input
-        type="file"
-        accept="video/*"
-        multiple
-        @change="handleFileChange"
-        :disabled="isSending"
+          type="file"
+          accept="video/*"
+          multiple
+          @change="handleFileChange"
+          :disabled="isSending"
       />
       <button type="submit" :disabled="isSending">
         <span v-if="isSending">Enviando...</span>

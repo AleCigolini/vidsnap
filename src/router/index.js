@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import { useAuth } from '@/services/authService'
+import {createRouter, createWebHistory} from 'vue-router'
+import {useAuth} from '@/services/authService'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,30 +13,30 @@ const router = createRouter({
       path: '/',
       name: 'welcome',
       component: () => import('../views/BemVindoView.vue'),
-      meta: { requiresAuth: true },
+      meta: {requiresAuth: true},
     },
     {
       path: '/enviar-videos',
       name: 'enviar-videos',
       component: () => import('../views/EnviarVideosView.vue'),
-      meta: { requiresAuth: true },
+      meta: {requiresAuth: true},
     },
     {
       path: '/listar-videos',
       name: 'listar-videos',
       component: () => import('../views/ListarVideosView.vue'),
-      meta: { requiresAuth: true },
+      meta: {requiresAuth: true},
     },
   ],
 })
 
 router.beforeEach((to, from, next) => {
-  const { isAuthenticated } = useAuth()
+  const {isAuthenticated} = useAuth()
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
 
-  if (requiresAuth && !isAuthenticated.value) {
+  if (requiresAuth && !isAuthenticated()) {
     next('/login')
-  } else if (to.path === '/login' && isAuthenticated.value) {
+  } else if (to.path === '/login' && isAuthenticated()) {
     next('/')
   } else {
     next()

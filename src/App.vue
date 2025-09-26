@@ -1,26 +1,31 @@
 <script setup>
-import { RouterLink, RouterView, useRouter } from 'vue-router'
-import { useAuth } from '@/services/authService'
+import {RouterLink, RouterView, useRouter} from 'vue-router'
+import {useAuth} from '@/services/authService'
+import Notification from "@/components/Notification.vue";
+import {computed} from "vue";
 
-const { isAuthenticated, logout } = useAuth()
+const {isAuthenticated, logout} = useAuth()
 const router = useRouter()
 
 const handleLogout = () => {
   logout()
   router.push('/login')
 }
+
+const isLoggedIn = computed(() => isAuthenticated())
 </script>
 
 <template>
   <div class="app-container">
-    <nav v-if="isAuthenticated" class="nav-bar">
+    <Notification v-if="isLoggedIn"/>
+    <nav v-if="isLoggedIn" class="nav-bar">
       <RouterLink to="/" class="nav-link">Tela inicial</RouterLink>
       <RouterLink to="/enviar-videos" class="nav-link">Enviar vídeos</RouterLink>
       <RouterLink to="/listar-videos" class="nav-link">Listar arquivos</RouterLink>
       <a href="#" @click.prevent="handleLogout" class="nav-link">Sair</a>
     </nav>
-    <main class="main-content" :class="{ 'full': !isAuthenticated }">
-      <RouterView />
+    <main class="main-content" :class="{ 'full': !isLoggedIn }">
+      <RouterView/>
     </main>
   </div>
 </template>
@@ -45,8 +50,8 @@ const handleLogout = () => {
   max-height: 40vh;
   position: relative;
   background: inherit;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
-  border-bottom: 1px solid rgba(255,255,255,0.07);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .nav-link {
@@ -103,6 +108,7 @@ const handleLogout = () => {
     justify-content: center;
     padding: 0 0.5rem;
   }
+
   .main-content {
     padding: 0;
   }

@@ -1,17 +1,19 @@
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuth } from '@/services/authService'
+import {ref} from 'vue'
+import {useRouter} from 'vue-router'
+import {useAuth} from '@/services/authService'
 
 const username = ref('')
 const password = ref('')
 const errorMessage = ref('')
-const { login } = useAuth()
+const {login, isAuthenticated} = useAuth()
 const router = useRouter()
 
 const handleLogin = () => {
   if (login(username.value, password.value)) {
-    router.push('/')
+    if (isAuthenticated()) {
+      router.push('/')
+    }
   } else {
     errorMessage.value = 'Usuário ou senha inválidos'
   }
@@ -101,4 +103,3 @@ button:hover {
   text-align: center;
 }
 </style>
-

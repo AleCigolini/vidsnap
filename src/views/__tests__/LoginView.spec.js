@@ -1,15 +1,14 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { createRouter, createWebHistory } from 'vue-router'
-import { nextTick } from 'vue'
+import {beforeEach, describe, expect, it, vi} from 'vitest'
+import {mount} from '@vue/test-utils'
+import {createRouter, createWebHistory} from 'vue-router'
+import {nextTick} from 'vue'
 import LoginView from '../LoginView.vue'
-import { useAuth } from '@/services/authService'
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/', name: 'home' },
-    { path: '/login', name: 'login' }
+    {path: '/', name: 'home'},
+    {path: '/login', name: 'login'}
   ]
 })
 
@@ -19,7 +18,7 @@ const loginMock = vi.fn((username, password) => username === 'admin' && password
 vi.mock('@/services/authService', () => ({
   useAuth: vi.fn(() => ({
     login: loginMock,
-    isAuthenticated: { value: false }
+    isAuthenticated: {value: false}
   }))
 }))
 
