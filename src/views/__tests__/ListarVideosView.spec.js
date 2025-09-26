@@ -2,7 +2,7 @@ import {beforeEach, describe, expect, it, vi} from 'vitest'
 import {mount} from '@vue/test-utils'
 import {nextTick} from 'vue'
 import ListarVideosView from '../ListarVideosView.vue'
-import {listarArquivosCompactados} from '@/services/videoService.js'
+import {listarArquivos} from '@/services/videoService.js'
 import Loader from '@/components/Loader.vue'
 
 vi.mock('@/services/videoService', () => ({
@@ -31,14 +31,14 @@ describe('ListarVideosView', () => {
 
   describe('Inicialização e carregamento', () => {
     it('deve mostrar loader enquanto carrega os dados', async () => {
-      listarArquivosCompactados.mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)))
+      listarArquivos.mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)))
       wrapper = mount(ListarVideosView)
 
       expect(wrapper.findComponent(Loader).exists()).toBe(true)
     })
 
     it('deve carregar e exibir a lista de arquivos', async () => {
-      listarArquivosCompactados.mockResolvedValue(mockArquivos)
+      listarArquivos.mockResolvedValue(mockArquivos)
       wrapper = mount(ListarVideosView)
 
       await nextTick()
@@ -54,7 +54,7 @@ describe('ListarVideosView', () => {
     })
 
     it('deve exibir mensagem quando não houver arquivos', async () => {
-      listarArquivosCompactados.mockResolvedValue([])
+      listarArquivos.mockResolvedValue([])
       wrapper = mount(ListarVideosView)
 
       await nextTick()
@@ -67,7 +67,7 @@ describe('ListarVideosView', () => {
 
   describe('Status dos arquivos', () => {
     beforeEach(async () => {
-      listarArquivosCompactados.mockResolvedValue(mockArquivos)
+      listarArquivos.mockResolvedValue(mockArquivos)
       wrapper = mount(ListarVideosView)
       await nextTick()
       await nextTick()
@@ -88,7 +88,7 @@ describe('ListarVideosView', () => {
 
   describe('Funcionalidade de download', () => {
     beforeEach(async () => {
-      listarArquivosCompactados.mockResolvedValue(mockArquivos)
+      listarArquivos.mockResolvedValue(mockArquivos)
       wrapper = mount(ListarVideosView)
       await nextTick()
       await nextTick()
@@ -105,7 +105,8 @@ describe('ListarVideosView', () => {
     })
 
     it('deve chamar a função de download com o nome correto do arquivo', async () => {
-      const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {})
+      const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {
+      })
 
       const botaoDownload = wrapper.findAll('.btn-download')[0]
       await botaoDownload.trigger('click')
@@ -117,7 +118,7 @@ describe('ListarVideosView', () => {
 
   describe('Responsividade', () => {
     beforeEach(async () => {
-      listarArquivosCompactados.mockResolvedValue(mockArquivos)
+      listarArquivos.mockResolvedValue(mockArquivos)
       wrapper = mount(ListarVideosView)
       await nextTick()
       await nextTick()

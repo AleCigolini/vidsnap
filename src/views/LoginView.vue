@@ -6,7 +6,7 @@ import {useAuth} from '@/services/authService'
 const username = ref('')
 const password = ref('')
 const errorMessage = ref('')
-const { login, isAuthenticated } = useAuth()
+const {login, isAuthenticated} = useAuth()
 const router = useRouter()
 
 const handleLogin = () => {

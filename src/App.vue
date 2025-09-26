@@ -4,7 +4,7 @@ import {useAuth} from '@/services/authService'
 import Notification from "@/components/Notification.vue";
 import {computed} from "vue";
 
-const { isAuthenticated, logout } = useAuth()
+const {isAuthenticated, logout} = useAuth()
 const router = useRouter()
 
 const handleLogout = () => {
@@ -25,7 +25,7 @@ const isLoggedIn = computed(() => isAuthenticated())
       <a href="#" @click.prevent="handleLogout" class="nav-link">Sair</a>
     </nav>
     <main class="main-content" :class="{ 'full': !isLoggedIn }">
-      <RouterView />
+      <RouterView/>
     </main>
   </div>
 </template>
@@ -50,8 +50,8 @@ const isLoggedIn = computed(() => isAuthenticated())
   max-height: 40vh;
   position: relative;
   background: inherit;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
-  border-bottom: 1px solid rgba(255,255,255,0.07);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .nav-link {
@@ -108,6 +108,7 @@ const isLoggedIn = computed(() => isAuthenticated())
     justify-content: center;
     padding: 0 0.5rem;
   }
+
   .main-content {
     padding: 0;
   }

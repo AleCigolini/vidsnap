@@ -25,7 +25,7 @@ describe('EnviarVideosView', () => {
     })
 
     it('deve retornar true quando arquivos forem selecionados', async () => {
-      wrapper.vm.files = [new File([''], 'test.mp4', { type: 'video/mp4' })]
+      wrapper.vm.files = [new File([''], 'test.mp4', {type: 'video/mp4'})]
 
       const result = await wrapper.vm.validarArquivosSelecionados()
 
@@ -35,7 +35,7 @@ describe('EnviarVideosView', () => {
 
   describe('handleFileChange', () => {
     it('deve atualizar files e limpar mensagens quando arquivos forem selecionados', () => {
-      const mockFiles = [new File([''], 'test.mp4', { type: 'video/mp4' })]
+      const mockFiles = [new File([''], 'test.mp4', {type: 'video/mp4'})]
       const event = {
         target: {
           files: mockFiles
@@ -61,7 +61,7 @@ describe('EnviarVideosView', () => {
     })
 
     it('deve enviar videos e exibir mensagem de sucesso', async () => {
-      const mockFiles = [new File([''], 'test.mp4', { type: 'video/mp4' })]
+      const mockFiles = [new File([''], 'test.mp4', {type: 'video/mp4'})]
       wrapper.vm.files = mockFiles
 
       enviarVideos.mockResolvedValueOnce({
@@ -79,7 +79,7 @@ describe('EnviarVideosView', () => {
     })
 
     it('deve exibir mensagem de erro quando o envio falhar', async () => {
-      const mockFiles = [new File([''], 'test.mp4', { type: 'video/mp4' })]
+      const mockFiles = [new File([''], 'test.mp4', {type: 'video/mp4'})]
       wrapper.vm.files = mockFiles
 
       enviarVideos.mockResolvedValueOnce({

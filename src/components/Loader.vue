@@ -15,6 +15,7 @@
   min-height: 180px;
   margin-top: 2rem;
 }
+
 .loader {
   border: 4px solid #232a36;
   border-top: 4px solid #1976d2;
@@ -24,15 +25,22 @@
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;
 }
+
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
+
 .loader-text {
   color: #bbb;
   font-size: 1.1rem;
   margin-top: 0.5rem;
 }
+
 @media (max-width: 600px) {
   .loader {
     width: 36px;

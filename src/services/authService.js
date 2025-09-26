@@ -1,27 +1,52 @@
 import {ref} from 'vue'
 
 const tokenKey = 'jwtToken'
+const userKey = 'loggedUser'
 const token = ref(sessionStorage.getItem(tokenKey) || '')
 
-function login(username, password) {
-    console.log(import.meta.env.VITE_APP_API_BASE_URL)
-  // Simulate API call and JWT response
-  if (username === 'admin' && password === 'admin') {
-      const fakeJwt = 'fake-jwt-token-for-admin'
-    token.value = fakeJwt
-    sessionStorage.setItem(tokenKey, fakeJwt)
-    return true
+async function login(username, password) {
+  try {
+    const response = await fetch(
+      import.meta.env.VITE_APP_API_BASE_URL + '/usuario/identificacao',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          login: username,
+          senha: password,
+        }),
+      }
+    )
+    if (!response.ok) return false
+
+    const jwt = response.headers.get('Authorization')
+    const data = await response.json()
+    if (jwt && data.login) {
+      token.value = jwt
+      sessionStorage.setItem(tokenKey, jwt)
+      sessionStorage.setItem(userKey, data.login)
+      return true
+    }
+    return false
+  } catch (e) {
+    return false
   }
-  return false
 }
 
 function logout() {
   token.value = ''
   sessionStorage.removeItem(tokenKey)
+  sessionStorage.removeItem(userKey)
 }
 
 function getToken() {
   return token.value
+}
+
+function getLoggedUser() {
+  return sessionStorage.getItem(userKey) || ''
 }
 
 function isAuthenticated() {
@@ -34,6 +59,7 @@ export function useAuth() {
     login,
     logout,
     getToken,
+    getLoggedUser,
     isAuthenticated,
   }
 }

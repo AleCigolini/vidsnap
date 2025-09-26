@@ -1,8 +1,8 @@
 <script setup>
-import { onMounted, onUnmounted } from 'vue'
-import { useNotification } from '@/services/notificationService'
+import {onMounted, onUnmounted} from 'vue'
+import {useNotification} from '@/services/notificationService'
 
-const { notification, connect, disconnect } = useNotification()
+const {notification, connect, disconnect} = useNotification()
 
 onMounted(() => {
   connect()
