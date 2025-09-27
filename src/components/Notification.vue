@@ -1,8 +1,31 @@
-<script setup>
-import {onMounted, onUnmounted} from 'vue'
+<script setup lang="ts">
+import {computed, onMounted, onUnmounted, watch} from 'vue'
 import {useNotification} from '@/services/notificationService'
+import {useRoute, useRouter} from 'vue-router'
 
 const {notification, connect, disconnect} = useNotification()
+const router = useRouter()
+const route = useRoute()
+
+const notificationClass = computed(() => {
+  if (!notification.value) return ''
+  return notification.value.eventPayload?.status === 'ERROR'
+      ? 'notification-error'
+      : ''
+})
+
+const notificationMessage = computed(() => {
+  if (!notification.value) return ''
+  return notification.value.eventPayload?.content || notification.value.message
+})
+
+watch(notification, () => {
+  if (route.path === '/listar-videos') {
+    router.replace({path: '/listar-videos', query: {...route.query, reload: Date.now()}});
+  } else {
+    router.push({path: '/listar-videos'});
+  }
+})
 
 onMounted(() => {
   connect()
@@ -15,8 +38,11 @@ onUnmounted(() => {
 
 <template>
   <Transition name="slide-fade">
-    <div v-if="notification" class="notification">
-      {{ notification.message }}
+    <div
+        v-if="notification"
+        :class="['notification', notificationClass]"
+    >
+      {{ notificationMessage }}
     </div>
   </Transition>
 </template>
@@ -30,12 +56,16 @@ onUnmounted(() => {
   min-width: 300px;
   max-width: 400px;
   padding: 16px 20px;
-  background-color: #1976d2;
+  background-color: #19d21c;
   color: white;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   font-size: 1rem;
   line-height: 1.4;
+}
+
+.notification-error {
+  background-color: #d32f2f !important;
 }
 
 .slide-fade-enter-active {
