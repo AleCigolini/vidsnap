@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {onMounted, ref} from 'vue'
-import {listarArquivos} from '@/services/videoService'
+import {baixarVideoPorId, listarArquivos} from '@/services/videoService'
 import Loader from '@/components/Loader.vue'
 import {VideoList} from "@/types/VideoList";
 
@@ -13,9 +13,25 @@ onMounted(async () => {
   isLoading.value = false
 })
 
-function downloadArquivo(nome: string) {
-  alert(`Download do arquivo: ${nome}`)
+async function downloadArquivo(id: number, nome: string) {
+  try {
+    const blob = await baixarVideoPorId(id)
+
+    const url = window.URL.createObjectURL(blob)
+
+    const a = document.createElement('a')
+    a.href = url
+    a.download = nome
+    a.style.display = 'none'
+
+    a.click()
+
+    window.URL.revokeObjectURL(url)
+  } catch (e) {
+    alert('Erro ao baixar o arquivo.')
+  }
 }
+
 </script>
 
 <template>
@@ -65,7 +81,7 @@ function downloadArquivo(nome: string) {
                 <button
                     class="btn-download"
                     :disabled="arquivo.status !== 'PROCESSED'"
-                    @click="downloadArquivo(arquivo.originalFileName)"
+                    @click="downloadArquivo(arquivo.id, arquivo.originalFileName)"
                 >
                   <span class="btn-download-text">Download</span>
                   <svg class="btn-download-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"

@@ -41,10 +41,6 @@ function logout() {
   sessionStorage.removeItem(userKey)
 }
 
-function getToken() {
-  return token.value
-}
-
 function getLoggedUser() {
   return sessionStorage.getItem(userKey) || ''
 }
@@ -58,7 +54,6 @@ export function useAuth() {
     token,
     login,
     logout,
-    getToken,
     getLoggedUser,
     isAuthenticated,
   }
