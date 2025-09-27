@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {onMounted, ref} from 'vue'
-import {baixarVideoPorId, listarArquivos} from '@/services/videoService'
+import {downloadVideoPorId, listarArquivos} from '@/services/videoService'
 import Loader from '@/components/Loader.vue'
 import {VideoList} from "@/types/VideoList";
 
@@ -15,7 +15,7 @@ onMounted(async () => {
 
 async function downloadArquivo(id: number, nome: string) {
   try {
-    const blob = await baixarVideoPorId(id)
+    const blob = await downloadVideoPorId(id)
 
     const url = window.URL.createObjectURL(blob)
 

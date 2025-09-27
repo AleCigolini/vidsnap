@@ -22,7 +22,7 @@ export async function enviarVideos(arquivos) {
   return await response.json()
 }
 
-export async function baixarVideoPorId(id) {
+export async function downloadVideoPorId(id) {
   const response = await fetch(
     import.meta.env.VITE_APP_API_BASE_URL + `/videos/api/v1/videos/${id}/download`
   )
