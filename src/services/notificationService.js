@@ -8,7 +8,7 @@ function connect() {
   const {getLoggedUser} = useAuth()
   const clientId = getLoggedUser()
   eventSource = new EventSource(
-    import.meta.env.VITE_APP_API_BASE_URL + "/sse/messages?clientId=" + clientId
+    import.meta.env.VITE_APP_API_BASE_URL + "/notifications/sse/messages?clientId=" + clientId
   )
 
   eventSource.onmessage = (event) => {
