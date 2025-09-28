@@ -23,10 +23,10 @@ async function login(username, password) {
 
     const jwt = response.headers.get('Authorization')
     const data = await response.json()
-    if (jwt && data.login) {
+    if (data.id) {
       token.value = jwt
       sessionStorage.setItem(tokenKey, jwt)
-      sessionStorage.setItem(userKey, data.login)
+      sessionStorage.setItem(userKey, data.id)
       return true
     }
     return false
