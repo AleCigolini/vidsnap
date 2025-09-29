@@ -2,7 +2,6 @@ import {beforeEach, describe, expect, it, vi} from 'vitest'
 import {mount} from '@vue/test-utils'
 import {createRouter, createWebHistory} from 'vue-router'
 import {nextTick} from 'vue'
-import LoginView from '../LoginView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -12,23 +11,35 @@ const router = createRouter({
   ]
 })
 
-const routerPushSpy = vi.spyOn(router, 'push')
-
-const loginMock = vi.fn((username, password) => username === 'admin' && password === 'admin')
-vi.mock('@/services/authService', () => ({
-  useAuth: vi.fn(() => ({
-    login: loginMock,
-    isAuthenticated: {value: false}
-  }))
-}))
-
 describe('LoginView', () => {
   let wrapper
+    let loginMock
+    let isAuthenticatedMock
+    let routerPushSpy
+    let authenticated
+    let LoginView
 
-  beforeEach(() => {
+    beforeEach(async () => {
+        // Reset estado de autenticação
+        authenticated = false
+        loginMock = vi.fn((username, password) => {
+            const result = username === 'admin' && password === 'admin'
+            authenticated = result
+            return result
+        })
+        isAuthenticatedMock = vi.fn(() => authenticated)
+        vi.doMock('@/services/authService', () => ({
+            useAuth: () => ({
+                login: loginMock,
+                isAuthenticated: isAuthenticatedMock
+            })
+        }))
+        vi.resetModules()
     vi.clearAllMocks()
-    router.push('/login')
-
+        // Importa LoginView após o mock
+        LoginView = (await import('../LoginView.vue')).default
+        routerPushSpy = vi.spyOn(router, 'push')
+        await router.push('/login')
     wrapper = mount(LoginView, {
       global: {
         plugins: [router]
@@ -71,11 +82,10 @@ describe('LoginView', () => {
       await passwordInput.setValue('admin')
 
       await wrapper.find('form').trigger('submit')
-
-      expect(loginMock).toHaveBeenCalledWith('admin', 'admin')
-
       await nextTick()
 
+        expect(loginMock).toHaveBeenCalledWith('admin', 'admin')
+        expect(isAuthenticatedMock).toHaveBeenCalled()
       expect(routerPushSpy).toHaveBeenCalledWith('/')
     })
 
@@ -87,17 +97,18 @@ describe('LoginView', () => {
       await passwordInput.setValue('senha_errada')
 
       await wrapper.find('form').trigger('submit')
+        await nextTick()
 
-      expect(wrapper.find('.error-message').text()).toBe('Usuário ou senha inválidos')
+        const error = wrapper.find('.error-message')
+        expect(error.exists()).toBe(true)
+        expect(error.text()).toBe('Usuário ou senha inválidos')
       expect(router.currentRoute.value.path).toBe('/login')
     })
 
     it('deve requerer preenchimento dos campos', async () => {
       await wrapper.find('form').trigger('submit')
-
       const usernameInput = wrapper.find('#username')
       const passwordInput = wrapper.find('#password')
-
       expect(usernameInput.attributes('required')).toBeDefined()
       expect(passwordInput.attributes('required')).toBeDefined()
     })

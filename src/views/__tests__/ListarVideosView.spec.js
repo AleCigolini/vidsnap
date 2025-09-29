@@ -2,11 +2,13 @@ import {beforeEach, describe, expect, it, vi} from 'vitest'
 import {mount} from '@vue/test-utils'
 import {nextTick} from 'vue'
 import ListarVideosView from '../ListarVideosView.vue'
-import {listarArquivos} from '@/services/videoService.js'
 import Loader from '@/components/Loader.vue'
+import {baixarVideoPorId, listarArquivos} from '@/services/videoService'
 
+// Mock dos serviços
 vi.mock('@/services/videoService', () => ({
-  listarArquivosCompactados: vi.fn()
+    listarArquivos: vi.fn(),
+    baixarVideoPorId: vi.fn()
 }))
 
 describe('ListarVideosView', () => {
@@ -14,14 +16,16 @@ describe('ListarVideosView', () => {
 
   const mockArquivos = [
     {
-      nome: 'teste1.zip',
-      tamanhoMB: 10.5,
-      status: 'Finalizado'
+        id: 1,
+        originalFileName: 'teste1.zip',
+        fileSize: 10.5,
+        status: 'PROCESSED'
     },
     {
-      nome: 'teste2.zip',
-      tamanhoMB: 15.7,
-      status: 'Processando'
+        id: 2,
+        originalFileName: 'teste2.zip',
+        fileSize: 15.7,
+        status: 'PROCESSING'
     }
   ]
 
@@ -33,21 +37,17 @@ describe('ListarVideosView', () => {
     it('deve mostrar loader enquanto carrega os dados', async () => {
       listarArquivos.mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)))
       wrapper = mount(ListarVideosView)
-
       expect(wrapper.findComponent(Loader).exists()).toBe(true)
     })
 
     it('deve carregar e exibir a lista de arquivos', async () => {
       listarArquivos.mockResolvedValue(mockArquivos)
       wrapper = mount(ListarVideosView)
-
+        await nextTick()
       await nextTick()
-      await nextTick() // Aguardar a atualização do DOM após o onMounted
-
       expect(wrapper.findComponent(Loader).exists()).toBe(false)
       const linhasTabela = wrapper.findAll('tbody tr')
       expect(linhasTabela).toHaveLength(2)
-
       // Verificar se os dados estão corretos
       expect(linhasTabela[0].find('.col-nome').text()).toBe('teste1.zip')
       expect(linhasTabela[0].find('.col-tamanho').text()).toBe('10.50')
@@ -56,10 +56,8 @@ describe('ListarVideosView', () => {
     it('deve exibir mensagem quando não houver arquivos', async () => {
       listarArquivos.mockResolvedValue([])
       wrapper = mount(ListarVideosView)
-
       await nextTick()
       await nextTick()
-
       expect(wrapper.find('.empty-list-message').exists()).toBe(true)
       expect(wrapper.find('.empty-list-message').text()).toContain('Nenhum arquivo compactado disponível ainda')
     })
@@ -76,13 +74,13 @@ describe('ListarVideosView', () => {
     it('deve exibir o status correto para arquivo finalizado', () => {
       const statusFinalizado = wrapper.findAll('.status')[0]
       expect(statusFinalizado.classes()).toContain('finalizado')
-      expect(statusFinalizado.find('.status-text').text()).toBe('Finalizado')
+        expect(statusFinalizado.find('.status-text.desktop').text()).toBe('PROCESSED')
     })
 
     it('deve exibir o status correto para arquivo processando', () => {
       const statusProcessando = wrapper.findAll('.status')[1]
       expect(statusProcessando.classes()).toContain('processando')
-      expect(statusProcessando.find('.status-text').text()).toBe('Processando')
+        expect(statusProcessando.find('.status-text.desktop').text()).toBe('PROCESSING')
     })
   })
 
@@ -104,15 +102,17 @@ describe('ListarVideosView', () => {
       expect(botoesDownload[1].attributes('disabled')).toBeDefined()
     })
 
-    it('deve chamar a função de download com o nome correto do arquivo', async () => {
-      const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {
-      })
-
+      it('deve chamar baixarVideoPorId e abrir a URL ao clicar em download', async () => {
+          const url = 'http://localhost/download/teste1.zip'
+          baixarVideoPorId.mockResolvedValue(url)
+          const windowOpenSpy = vi.spyOn(window, 'open').mockImplementation(() => {
+          })
       const botaoDownload = wrapper.findAll('.btn-download')[0]
       await botaoDownload.trigger('click')
-
-      expect(alertSpy).toHaveBeenCalledWith('Download do arquivo: teste1.zip')
-      alertSpy.mockRestore()
+          await nextTick()
+          expect(baixarVideoPorId).toHaveBeenCalledWith(1)
+          expect(windowOpenSpy).toHaveBeenCalledWith(url, '_blank')
+          windowOpenSpy.mockRestore()
     })
   })
 
