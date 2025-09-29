@@ -6,9 +6,9 @@ const token = ref(sessionStorage.getItem(tokenKey) || '')
 
 async function login(username, password) {
   if(username === '123' && password === '123') {
-    token.value = '123'
-    sessionStorage.setItem(tokenKey, '123')
-    sessionStorage.setItem(userKey, '123')
+    token.value = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjNlNDU2Ny1lODliLTEyZDMtYTQ1Ni00MjY2MTQ0NzQwMDAiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3MDUyMDAwMDB9.-h8bLq9wH2r5V0QlDYPuO1R4BfJv4n7kz4p5k6RzVMI'
+    sessionStorage.setItem(tokenKey, token.value)
+    sessionStorage.setItem(userKey, 'e389406d-5531-4acf-a354-be5cc46a8cd4')
     return true;
   }
   try {
