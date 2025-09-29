@@ -28,5 +28,5 @@ export async function baixarVideoPorId(id) {
   )
   if (!response.ok) throw new Error('Erro ao baixar vídeo')
 
-  return await response.blob()
+    return await response.text()
 }

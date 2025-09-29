@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import {computed, onMounted, onUnmounted, watch} from 'vue'
+import {computed, onMounted, onUnmounted, ref, watch} from 'vue'
 import {useNotification} from '@/services/notificationService'
 import {useRoute, useRouter} from 'vue-router'
 
 const {notification, connect, disconnect} = useNotification()
 const router = useRouter()
 const route = useRoute()
+
+const showNotification = ref(false)
+let timer: ReturnType<typeof setTimeout> | null = null
 
 const notificationClass = computed(() => {
   if (!notification.value) return ''
@@ -19,11 +22,18 @@ const notificationMessage = computed(() => {
   return notification.value.eventPayload?.content || notification.value.message
 })
 
-watch(notification, () => {
-  if (route.path === '/listar-videos') {
-    router.replace({path: '/listar-videos', query: {...route.query, reload: Date.now()}});
-  } else {
-    router.push({path: '/listar-videos'});
+watch(notification, (newVal) => {
+  if (newVal) {
+    showNotification.value = true
+    if (timer) clearTimeout(timer)
+    timer = setTimeout(() => {
+      showNotification.value = false
+    }, 10000)
+    if (route.path === '/listar-videos') {
+      router.replace({path: '/listar-videos', query: {...route.query, reload: Date.now()}});
+    } else {
+      router.push({path: '/listar-videos'});
+    }
   }
 })
 
@@ -33,13 +43,14 @@ onMounted(() => {
 
 onUnmounted(() => {
   disconnect()
+  if (timer) clearTimeout(timer)
 })
 </script>
 
 <template>
   <Transition name="slide-fade">
     <div
-        v-if="notification"
+        v-if="showNotification && notification"
         :class="['notification', notificationClass]"
     >
       {{ notificationMessage }}

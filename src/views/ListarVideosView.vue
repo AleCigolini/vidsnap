@@ -13,20 +13,14 @@ onMounted(async () => {
   isLoading.value = false
 })
 
-async function downloadArquivo(id: number, nome: string) {
+async function downloadArquivo(id: number) {
   try {
-    const blob = await baixarVideoPorId(id)
-
-    const url = window.URL.createObjectURL(blob)
-
-    const a = document.createElement('a')
-    a.href = url
-    a.download = nome
-    a.style.display = 'none'
-
-    a.click()
-
-    window.URL.revokeObjectURL(url)
+    const urlArquivo = await baixarVideoPorId(id)
+    if (typeof urlArquivo === 'string') {
+      window.open(urlArquivo, '_blank')
+    } else {
+      alert('Erro ao obter a URL do arquivo.')
+    }
   } catch (e) {
     alert('Erro ao baixar o arquivo.')
   }
@@ -81,7 +75,7 @@ async function downloadArquivo(id: number, nome: string) {
                 <button
                     class="btn-download"
                     :disabled="arquivo.status !== 'PROCESSED'"
-                    @click="downloadArquivo(arquivo.id, arquivo.originalFileName)"
+                    @click="downloadArquivo(arquivo.id)"
                 >
                   <span class="btn-download-text">Download</span>
                   <svg class="btn-download-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
