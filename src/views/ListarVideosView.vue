@@ -33,7 +33,7 @@ async function downloadArquivo(id: number) {
     <h1>Listar arquivos compactados</h1>
     <Loader v-if="isLoading"/>
     <template v-else>
-      <template v-if="arquivos.length > 0">
+      <template v-if="Array.isArray(arquivos) && arquivos.length > 0">
         <div class="tabela-wrapper">
           <table class="tabela-arquivos">
             <thead>
