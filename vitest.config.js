@@ -9,7 +9,7 @@ export default mergeConfig(
       environment: 'jsdom',
       root: fileURLToPath(new URL('./', import.meta.url)),
         coverage: {
-            provider: 'c8',
+            provider: 'v8',
             reporter: ['text', 'lcov'],
             reportsDirectory: './coverage',
         },
