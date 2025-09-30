@@ -13,7 +13,6 @@ export default mergeConfig(
             provider: 'c8',
             reporter: ['text', 'lcov'],
             reportsDirectory: './coverage',
-            exclude: ['**/e2e/**', '**/__tests__/**', '**/*.spec.js'],
         },
     },
   }),
